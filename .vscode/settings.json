@@ -1,4 +1,10 @@
 {
+    // 打开本项目时默认使用 conda 的 langchain_env 解释器
+    "python.defaultInterpreterPath": "E:\\anaconda_install\\envs\\langchain_env\\python.exe",
+    // 指定 conda 可执行文件路径,供 VSCode 定位/激活 conda 环境
+    "python.condaPath": "E:\\anaconda_install\\Scripts\\conda.exe",
+    // 新开集成终端时自动激活所选 Python 环境
+    "python.terminal.activateEnvironment": true,
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda"
 }
