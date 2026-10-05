@@ -134,3 +134,22 @@ if __name__ == "__main__":
     for msg in result["messages"]:
         if msg.type in ("human", "ai"):
             print(msg.content)
+
+# 外层主图：START
+#     ↓ 静态边
+# 外层主图：进入 flight_assistant【子图开始运行】
+#     ↓ 子图内部ReAct循环
+# LLM：需要两件事，订航班 + 订酒店。当前Agent只能订航班，酒店交给hotel_assistant
+# LLM选择调用工具 transfer_to_hotel_assistant（handoff_tool）
+#     ↓ 执行 handoff_tool
+# 构造 agent_input，return Command(goto=[Send("hotel_assistant", agent_input)], graph=Command.PARENT)
+#     ← graph=PARENT，跳出flight子图，回到外层主图，执行动态跳转
+# 外层主图：切换到 hotel_assistant【子图开始运行】
+#     ↓ hotel子图内部ReAct循环
+# LLM调用 book_hotel 工具，预订如家酒店
+# 工具返回成功结果，消息写入messages
+# LLM再次思考：所有任务全部做完，**不再调用任何工具，不返回Command**
+# hotel_assistant子图执行完毕，退出，交还控制权给外层主图
+# 外层主图：没有任何下一跳节点，没有Command跳转
+# 👉 图自动结束，到达END
+
