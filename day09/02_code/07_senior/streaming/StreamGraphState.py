@@ -24,6 +24,7 @@ def generate_joke(state: AtguiguState):
     return {"joke": f"This is a joke about {state['topic']}"}
 
 def main():
+    #能一直.的原理是add_node,add_edge内部返回self，只有最终.compile返回的CompiledStateGraph即graph一个图。
     graph = (
       StateGraph(AtguiguState)
       .add_node(refine_topic)
@@ -36,15 +37,22 @@ def main():
       .compile()
     )
 
-    # updates在图的每一步后，将更新流向状态。
+    # updates在图的每一步后，将更新流向状态。只显示每一步node后的状态更新输出
     for chunk in graph.stream({"topic": "ice cream"},stream_mode="updates"):
         print(chunk)
 
     print()
 
-    # values在图的每一步后，流出状态的全部值。
+    # values在图的每一步后，流出状态的全部值。显示每一步node前后的状态变化
     for chunk in graph.stream({"topic": "ice cream"},stream_mode="values"):
         print(chunk)
 
 if __name__ == "__main__":
     main()
+
+# {'refine_topic': {'topic': 'ice cream and cats'}}
+# {'generate_joke': {'joke': 'This is a joke about ice cream and cats'}}
+
+# {'topic': 'ice cream'}
+# {'topic': 'ice cream and cats'}
+# {'topic': 'ice cream and cats', 'joke': 'This is a joke about ice cream and cats'}
